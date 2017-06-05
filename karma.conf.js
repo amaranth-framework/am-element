@@ -2,94 +2,83 @@
 // Generated on Fri Dec 05 2014 16:49:29 GMT-0500 (EST)
 
 module.exports = function(config) {
-	config.set({
+  config.set({
 
-		// base path that will be used to resolve all patterns (eg. files, exclude)
-		basePath: '',
-
-
-		// frameworks to use
-		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		// frameworks: ['jspm', 'jasmine'],
-		frameworks: [ 'jasmine', 'requirejs' ],
-
-		// jspm: {
-		//     // Edit this to your needs
-		//     loadFiles: [ 'test/**/*.js' ],
-		//     serveFiles : [ 'src/**/*.js' ]
-		// },
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    basePath: '',
 
 
-		// list of files / patterns to load in the browser
-		files: [
-			// 'knockout.js',
-
-			'node_modules/requirejs/require.js',
-			'node_modules/karma-requirejs/lib/adapter.js',
-
-			// Edit this to your needs
-			{ pattern: 'src/**/*.js', included: false },
-			{ pattern: 'test/**/*.js', included: false },
-
-			// 'test/test-main.js'
-		],
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: [ 'requirejs', 'jasmine' ],
 
 
-		// list of files to exclude
-		exclude: [],
+    // list of files / patterns to load in the browser
+    files: [
+		// 'node_modules/requirejs/require.js',
+		// 'node_modules/karma-requirejs/lib/adapter.js',
+    	
+		'test/**/*.js',
+		'src/**/*.js'
+	],
 
 
-		// preprocess matching files before serving them to the browser
-		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-		preprocessors: {
-			'test/**/*.js': ['babel'],
-			'src/**/*.js': ['babel']
-		},
-
-		//
-		babelPreprocessor: {
-			options: {
-				sourceMap: 'inline',
-				presets: [ 'es2015-loose', 'stage-1' ],
-				plugins: [
-					'syntax-flow',
-					'transform-decorators-legacy',
-					'transform-flow-strip-types'
-				]
-			}
-		},
-
-		// test results reporter to use
-		// possible values: 'dots', 'progress'
-		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: [ 'progress' ],
+    // list of files to exclude
+    exclude: [
+    ],
 
 
-		// web server port
-		port: 9876,
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+      'test/**/*.js': ['babel'],
+      'src/**/*.js': ['babel']
+    },
 
 
-		// enable / disable colors in the output (reporters and logs)
-		colors: true,
+    babelPreprocessor: {
+      options: {
+        sourceMap: 'inline',
+        presets: [ 'es2015-loose', 'stage-1'],
+        plugins: [
+          'syntax-flow',
+          'transform-decorators-legacy',
+          'transform-flow-strip-types',
+          'transform-es2015-modules-amd'
+        ]
+      }
+    },
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress'],
 
 
-		// level of logging
-		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		logLevel: config.LOG_DEBUG,
+    // web server port
+    port: 9876,
 
 
-		// enable / disable watching file and executing tests whenever any file changes
-		autoWatch: true,
+    // enable / disable colors in the output (reporters and logs)
+    colors: true,
 
 
-		// start these browsers
-		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: ['Chrome'],
-		// browsers: ['Chrome', 'Firefox', 'IE'],
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    logLevel: config.LOG_INFO,
 
 
-		// Continuous Integration mode
-		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false
-	});
+    // enable / disable watching file and executing tests whenever any file changes
+    autoWatch: true,
+
+
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    browsers: ['Chrome'],
+
+
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: false
+  });
 };

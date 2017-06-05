@@ -1,7 +1,7 @@
 /**
  * @link https://developer.mozilla.org/en/docs/Web/API/HTMLElement
  */
-class AmElement extends HTMLElement {
+export class AmElement extends HTMLElement {
     /**
      * AmElement Constructor
      * @return {AmElement}
