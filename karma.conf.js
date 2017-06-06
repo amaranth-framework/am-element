@@ -2,82 +2,83 @@
 // Generated on Fri Dec 05 2014 16:49:29 GMT-0500 (EST)
 
 module.exports = function(config) {
-	config.set({
+  config.set({
 
-		// base path that will be used to resolve all patterns (eg. files, exclude)
-		basePath: '',
-
-
-		// frameworks to use
-		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: [ 'jspm', 'jasmine' ],
-
-		jspm: {
-			// Edit this to your needs
-			loadFiles: ['test/**/*.js'],
-			serveFiles : ['src/**/*.js']
-		},
+    // base path that will be used to resolve all patterns (eg. files, exclude)
+    basePath: '',
 
 
-		// list of files / patterns to load in the browser
-		files: [],
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: [ 'requirejs', 'jasmine' ],
 
 
-		// list of files to exclude
-		exclude: [],
+    // list of files / patterns to load in the browser
+    files: [
+		// 'node_modules/requirejs/require.js',
+		// 'node_modules/karma-requirejs/lib/adapter.js',
+    	
+		'test/**/*.js',
+		'src/**/*.js'
+	],
 
 
-		// preprocess matching files before serving them to the browser
-		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-		preprocessors: {
-			'test/**/*.js': ['babel'],
-			'src/**/*.js': ['babel']
-		},
+    // list of files to exclude
+    exclude: [
+    ],
 
 
-		//
-		babelPreprocessor: {
-			options: {
-				sourceMap: 'inline',
-				presets: [ 'es2015-loose', 'stage-1'],
-				plugins: [
-					'syntax-flow',
-					'transform-decorators-legacy',
-					'transform-flow-strip-types'
-				]
-			}
-		},
-
-		// test results reporter to use
-		// possible values: 'dots', 'progress'
-		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['progress'],
+    // preprocess matching files before serving them to the browser
+    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {
+      'test/**/*.js': ['babel'],
+      'src/**/*.js': ['babel']
+    },
 
 
-		// web server port
-		port: 9876,
+    babelPreprocessor: {
+      options: {
+        sourceMap: 'inline',
+        presets: [ 'es2015-loose', 'stage-1'],
+        plugins: [
+          'syntax-flow',
+          'transform-decorators-legacy',
+          'transform-flow-strip-types',
+          'transform-es2015-modules-amd'
+        ]
+      }
+    },
+
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['progress'],
 
 
-		// enable / disable colors in the output (reporters and logs)
-		colors: true,
+    // web server port
+    port: 9876,
 
 
-		// level of logging
-		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		logLevel: config.LOG_INFO,
+    // enable / disable colors in the output (reporters and logs)
+    colors: true,
 
 
-		// enable / disable watching file and executing tests whenever any file changes
-		autoWatch: true,
+    // level of logging
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    logLevel: config.LOG_INFO,
 
 
-		// start these browsers
-		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: ['Chrome'],
+    // enable / disable watching file and executing tests whenever any file changes
+    autoWatch: true,
 
 
-		// Continuous Integration mode
-		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false
-	});
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    browsers: ['Chrome'],
+
+
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: false
+  });
 };
