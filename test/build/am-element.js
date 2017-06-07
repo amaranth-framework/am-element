@@ -15,7 +15,7 @@ var AmElement = function (_HTMLElement) {
     _inherits(AmElement, _HTMLElement);
 
     /**
-     * AmElement Constructor
+     * @see HTMLElement::constructor()
      * @return {AmElement}
      */
     function AmElement() {
@@ -37,7 +37,7 @@ var AmElement = function (_HTMLElement) {
         return _this;
     }
     /**
-     * Event for Attribute Value Changed
+     * @see HTMLElement::attributeChangedCallback()
      * @param  {String} name
      * @param  {String} newValue
      * @param  {String} oldValue
@@ -52,20 +52,17 @@ var AmElement = function (_HTMLElement) {
             if (!this._attached || newValue === oldValue) {
                 return;
             }
-
-            var _name = name.replace(/[\-_]\w/g, function (w) {
-                return w.replace(/[\-_]/, '').toUpperCase();
-            });
-            var _method = 'attribute' + _name + 'Changed';
-            if (this[_method]) {
-                this[_method](newValue, oldValue);
-            } else {
+            // if there is no callback method specifically defined for this attribute
+            var callback = this.getAttributeChangedCallbackMethod(name);
+            if (!_method) {
                 this[name] = newValue;
+            } else {
+                callback.call(this, [newValue, oldValue]);
             }
         }
         /**
-         * [connectedCallback description]
-         * @return {void} [description]
+         * @see HTMLElement::connectedCallback()
+         * @return {void}
          */
 
     }, {
@@ -78,32 +75,41 @@ var AmElement = function (_HTMLElement) {
             var TEMPLATE = document.querySelector('#' + this.tagName.toLowerCase() + '-template');
             if (TEMPLATE) {
                 // const CONTENT = document.importNode(TEMPLATE.content, true);
+                // this._root.appendChild(CONTENT);
                 this._root.innerHTML = TEMPLATE.innerHTML;
             }
-
             this.constructor.observedAttributes.forEach(function (name) {
                 _this2[name] = _this2.getAttribute(name);
             });
         }
         /**
-         * [disctonnectedCallback description]
+         * @see HTMLElement::disctonnectedCallback()
          * @return {void} [description]
          */
 
     }, {
         key: 'disctonnectedCallback',
         value: function disctonnectedCallback() {
-            console.log("Custom Element removed from DOM!");
+            console.log('Custom Element ' + this._mainClass + ' removed from DOM!');
         }
         /**
-         * [setAttributeValue description]
-         * @param {String} name     [description]
-         * @param {String} newValue [description]
-         * @param {String} oldValue [description]
+         * Return this list of observable attributes for the HTML Element
+         * @return {Array(String)}
          */
 
     }, {
         key: 'changeValue',
+
+        //////////////////////////////////////////////////////////////////////////
+        //
+        //////////////////////////////////////////////////////////////////////////
+        /**
+         * [setAttributeValue description]
+         * @param {String} name
+         * @param {String} newValue
+         * @param {String} oldValue
+         * @return {void}
+         */
         value: function changeValue(name, newValue, oldValue) {
             // determine the attribute's element
             var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
@@ -113,19 +119,14 @@ var AmElement = function (_HTMLElement) {
             ELEMENT[PROPERTY] = newValue;
         }
         /**
-         * Return this list of observable attributes for the HTML Element
-         * @return {Array(String)}
-         */
-
-    }, {
-        key: 'defineObservedAttributesAsProperties',
-
-        /**
          * Define generic getter & setter for each observed attribute (as internal variables)
          * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
          * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor
          * @return {void}
          */
+
+    }, {
+        key: 'defineObservedAttributesAsProperties',
         value: function defineObservedAttributesAsProperties() {
             var _this3 = this;
 
@@ -137,11 +138,26 @@ var AmElement = function (_HTMLElement) {
                         },
                         set: function set(value) {
                             this['__' + name] = value;
-                            this.changeValue(name, value);
+                            // this.changeValue(name, value);
                         }
                     });
                 }
             });
+        }
+        /**
+         * Try to obtain the attributeChanged{Name}Callback method; return false in stead
+         * @method getAttributeChangedCallbackMethodByName
+         * @param  {String}           name
+         * @return {Boolean|Function}
+         */
+
+    }, {
+        key: 'getAttributeChangedCallbackMethod',
+        value: function getAttributeChangedCallbackMethod(name) {
+            var method = 'attribute' + name.replace(/[\-_]\w/g, function (w) {
+                return w.replace(/[\-_]/, '').toUpperCase();
+            }) + 'ChangedCallback';
+            return this[method];
         }
     }], [{
         key: 'observedAttributes',

@@ -6,20 +6,30 @@
   </head>
   <body>
     <template id="am-hello-world-template">
-      <h1>Override content</h1>
+      <h1 class="hello"><span class="hello__message"></span> World!</h1>
     </template>
 
     <script src="./am-element.js"></script>
     <script>
       class HelloWorldElement extends AmElement {
+        /**
+         * @see AmElement::constructor()
+         */
         constructor() {
           super();
+          // this._root = this;
+        }
+        /**
+         * @see AmElement::observedAttributes()
+         */
+        static get observedAttributes() {
+          return ['message'];
         }
       };
 
       window.customElements.define('am-hello-world', HelloWorldElement);
     </script>
 
-    <am-hello-world></am-hello-world>
+    <am-hello-world message="Hello" data-src-message="innerHTML"></am-hello-world>
   </body>
 </html>

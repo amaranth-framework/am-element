@@ -3,7 +3,7 @@
  */
 class AmElement extends HTMLElement {
     /**
-     * AmElement Constructor
+     * @see HTMLElement::constructor()
      * @return {AmElement}
      */
     constructor() {
@@ -13,7 +13,7 @@ class AmElement extends HTMLElement {
         this._attached = false;
 
         // attach shadow root
-        this._root = this.attachShadow({ mode: 'open' });
+    	this._root = this.attachShadow({ mode: 'open' });
 
         // determine component main class
         this._mainClass = this.tagName.toLowerCase().replace('-element', '');
@@ -22,7 +22,7 @@ class AmElement extends HTMLElement {
         this.defineObservedAttributesAsProperties();
     }
     /**
-     * Event for Attribute Value Changed
+     * @see HTMLElement::attributeChangedCallback()
      * @param  {String} name
      * @param  {String} newValue
      * @param  {String} oldValue
@@ -33,18 +33,17 @@ class AmElement extends HTMLElement {
         if (!this._attached || newValue === oldValue) {
             return;
         }
-
-        let _name = name.replace(/[\-_]\w/g, (w) => w.replace(/[\-_]/, '').toUpperCase());
-        let _method = `attribute${_name}Changed`;
-        if (this[_method]) {
-            this[_method](newValue, oldValue);
+		// if there is no callback method specifically defined for this attribute
+		let callback = this.getAttributeChangedCallbackMethod(name);
+        if (!_method) {
+			this[name] = newValue;
         } else {
-            this[name] = newValue;
+			callback.call(this, [newValue, oldValue]);
         }
     }
     /**
-     * [connectedCallback description]
-     * @return {void} [description]
+     * @see HTMLElement::connectedCallback()
+     * @return {void}
      */
     connectedCallback() {
         this._attached = true;
@@ -52,23 +51,34 @@ class AmElement extends HTMLElement {
         const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
         if (TEMPLATE) {
 			// const CONTENT = document.importNode(TEMPLATE.content, true);
+			// this._root.appendChild(CONTENT);
         	this._root.innerHTML = TEMPLATE.innerHTML;
 		}
-
         this.constructor.observedAttributes.forEach((name) => { this[name] = this.getAttribute(name); });
     }
     /**
-     * [disctonnectedCallback description]
+     * @see HTMLElement::disctonnectedCallback()
      * @return {void} [description]
      */
     disctonnectedCallback() {
-        console.log("Custom Element removed from DOM!");
+        console.log(`Custom Element ${this._mainClass} removed from DOM!`);
     }
     /**
+     * Return this list of observable attributes for the HTML Element
+     * @return {Array(String)}
+     */
+    static get observedAttributes() {
+        return [];
+    }
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+    /**
      * [setAttributeValue description]
-     * @param {String} name     [description]
-     * @param {String} newValue [description]
-     * @param {String} oldValue [description]
+     * @param {String} name
+     * @param {String} newValue
+     * @param {String} oldValue
+     * @return {void}
      */
     changeValue(name, newValue, oldValue) {
         // determine the attribute's element
@@ -77,13 +87,6 @@ class AmElement extends HTMLElement {
         const PROPERTY = ELEMENT.getAttribute(`data-src-${name}`);
         //
         ELEMENT[PROPERTY] = newValue;
-    }
-    /**
-     * Return this list of observable attributes for the HTML Element
-     * @return {Array(String)}
-     */
-    static get observedAttributes() {
-        return [];
     }
     /**
      * Define generic getter & setter for each observed attribute (as internal variables)
@@ -98,10 +101,20 @@ class AmElement extends HTMLElement {
                     get: function() { return this[`__${name}`] },
                     set: function(value) {
                         this[`__${name}`] = value;
-                        this.changeValue(name, value);
+                        // this.changeValue(name, value);
                     }
                 });
             }
         });
     }
+	/**
+	 * Try to obtain the attributeChanged{Name}Callback method; return false in stead
+	 * @method getAttributeChangedCallbackMethod
+	 * @param  {String}           name
+	 * @return {Boolean|Function}
+	 */
+	getAttributeChangedCallbackMethod(name) {
+		let method = `attribute${name.replace(/[\-_]\w/g, (w) => w.replace(/[\-_]/, '').toUpperCase())}ChangedCallback`;
+		return this[method];
+	}
 }

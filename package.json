@@ -8,7 +8,8 @@
     "babel-js": "./node_modules/.bin/babel src/ -d test/build",
     "babel-html": "./node_modules/.bin/babel-html -s test/src -d test/build",
     "pretest": "npm run babel-js && npm run babel-html",
-    "test": "./node_modules/.bin/testcafe all test/*.test.js"
+    "test": "./node_modules/.bin/testcafe all test/*.test.js",
+    "test-chrome": "npm run pretest && ./node_modules/.bin/testcafe chrome test/*.test.js"
   },
   "repository": {
     "type": "git",
