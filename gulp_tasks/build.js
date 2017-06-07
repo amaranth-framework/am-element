@@ -1,11 +1,11 @@
 const gulp = require('gulp');
 const babel = require('gulp-babel');
 const runSequence = require('run-sequence');
- 
+
 gulp.task('babel', () => {
     return gulp.src('src/**/*.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['env']
         }))
         .pipe(gulp.dest('lib'));
 });
