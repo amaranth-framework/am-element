@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Amaranth Element</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/custom-elements-es5-adapter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-hi-sd-ce.js"></script>
+  </head>
+  <body>
+    <template id="am-hello-world-template">
+      <h1>Override content</h1>
+    </template>
+
+    <script src="./am-element.js"></script>
+    <script>
+      class HelloWorldElement extends AmElement {
+        constructor() {
+          super();
+        }
+      };
+
+      window.customElements.define('am-hello-world', HelloWorldElement);
+    </script>
+
+    <am-hello-world></am-hello-world>
+  </body>
+</html>

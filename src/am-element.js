@@ -1,7 +1,7 @@
 /**
  * @link https://developer.mozilla.org/en/docs/Web/API/HTMLElement
  */
-export class AmElement extends HTMLElement {
+class AmElement extends HTMLElement {
     /**
      * AmElement Constructor
      * @return {AmElement}
@@ -18,7 +18,7 @@ export class AmElement extends HTMLElement {
         // determine component main class
         this._mainClass = this.tagName.toLowerCase().replace('-element', '');
 
-        // 
+        //
         this.defineObservedAttributesAsProperties();
     }
     /**
@@ -48,10 +48,12 @@ export class AmElement extends HTMLElement {
      */
     connectedCallback() {
         this._attached = true;
-    
+
         const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
-        const CONTENT = document.importNode(TEMPLATE.content, true);
-        this._root.appendChild(CONTENT);
+        if (TEMPLATE) {
+			// const CONTENT = document.importNode(TEMPLATE.content, true);
+        	this._root.innerHTML = TEMPLATE.innerHTML;
+		}
 
         this.constructor.observedAttributes.forEach((name) => { this[name] = this.getAttribute(name); });
     }
@@ -73,7 +75,7 @@ export class AmElement extends HTMLElement {
         const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
         // determine the attribute's element property
         const PROPERTY = ELEMENT.getAttribute(`data-src-${name}`);
-        // 
+        //
         ELEMENT[PROPERTY] = newValue;
     }
     /**
@@ -92,12 +94,12 @@ export class AmElement extends HTMLElement {
     defineObservedAttributesAsProperties() {
         this.constructor.observedAttributes.forEach((name) => {
             if (!Object.getOwnPropertyDescriptor(this, name) || Object.getOwnPropertyDescriptor(this, name).get === undefined) {
-                Object.defineProperty(this, name, { 
+                Object.defineProperty(this, name, {
                     get: function() { return this[`__${name}`] },
-                    set: function(value) { 
+                    set: function(value) {
                         this[`__${name}`] = value;
                         this.changeValue(name, value);
-                    } 
+                    }
                 });
             }
         });

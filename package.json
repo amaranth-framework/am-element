@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/gulp/bin/gulp.js build",
-    "test": "./node_modules/karma/bin/karma start"
+    "babel-js": "./node_modules/.bin/babel src/ -d test/build",
+    "babel-html": "./node_modules/.bin/babel-html -s test/src -d test/build",
+    "pretest": "npm run babel-js && npm run babel-html",
+    "test": "./node_modules/.bin/testcafe all test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -17,11 +20,9 @@
     "url": "https://github.com/amaranth-framework/am-element/issues"
   },
   "homepage": "https://github.com/amaranth-framework/am-element#readme",
-  "dependencies": {
-    "karma": "^1.7.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-html": "^0.5.1",
     "babel-plugin-syntax-flow": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -37,16 +38,8 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-run-sequence": "^0.3.2",
-    "jasmine": "^2.6.0",
-    "karma-babel-preprocessor": "^6.0.1",
-    "karma-chrome-launcher": "^2.1.1",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-ie-launcher": "^1.0.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-requirejs": "^1.1.0",
-    "require-dir": "^0.3.2",
-    "requirejs": "^2.3.3",
-    "run-sequence": "^1.2.2",
+    "http-server": "^0.10.0",
+    "testcafe": "^0.15.0",
     "vinyl-paths": "^2.1.0"
   }
 }
