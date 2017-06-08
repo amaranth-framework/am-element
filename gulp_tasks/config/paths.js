@@ -1,5 +1,10 @@
 
-module.exports = {
-    src: 'src/',
-    build: 'lib/'
-}
+var appRoot = 'src/';
+
+var paths = {
+  root: appRoot,
+  source: appRoot + '**/*.js',
+  output: 'dist/'
+};
+
+module.exports = paths;
