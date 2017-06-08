@@ -1,24 +1,29 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const runSequence = require('run-sequence');
- 
-gulp.task('babel', () => {
-    return gulp.src('src/**/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest('lib'));
+var paths = require('./config/paths');
+var compilerOptions = require('./config/babel-options');
+
+var gulp = require('gulp');
+
+var runSequence = require('run-sequence');
+var to5 = require('gulp-babel');
+var assign = Object.assign || require('object.assign');
+var concat = require('gulp-concat');
+
+var jsName = paths.packageName + '.js';
+var compileToModules = ['es2015', 'commonjs', 'amd', 'system', 'native-modules'];
+
+compileToModules.forEach(function(moduleType){
+	gulp.task('build-babel-' + moduleType, function () {
+		return gulp.src(paths.source)
+			.pipe(to5(assign({}, compilerOptions[moduleType]())))
+			.pipe(concat('index.js'))
+			.pipe(gulp.dest(paths.output + moduleType));
+	});
 });
 
-
-// this task calls the clean task (located
-// in ./clean.js), then runs the build-system
-// and build-html tasks in parallel
-// https://www.npmjs.com/package/gulp-run-sequence
 gulp.task('build', function(callback) {
-  return runSequence(
-    'clean',
-    'build',
-    callback
-  );
+	return runSequence(
+		'clean',
+		compileToModules.map(function(moduleType) { return 'build-babel-' + moduleType }),
+		callback
+	);
 });

@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Amaranth Element</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/custom-elements-es5-adapter.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-hi-sd-ce.js"></script>
+  </head>
+  <body>
+    <template id="am-hello-world-template">
+      <h1 class="hello-world"><span class="hello-world__message"></span> World!</h1>
+    </template>
+
+    <script src="./am-element.js"></script>
+    <script>
+      class HelloWorldElement extends AmElement {
+        /**
+         * @see AmElement::constructor()
+         */
+        constructor() {
+          super();
+          // this._root = this;
+        }
+        /**
+         * @see AmElement::observedAttributes()
+         */
+        static get observedAttributes() {
+          return ['message'];
+        }
+      };
+
+      window.customElements.define('am-hello-world', HelloWorldElement);
+    </script>
+
+    <am-hello-world message="Hello" data-src-message="innerHTML"></am-hello-world>
+  </body>
+</html>
