@@ -41,10 +41,24 @@
     "gulp-concat": "^2.6.1",
     "gulp-run-sequence": "^0.3.2",
     "http-server": "^0.10.0",
+    "jasmine-core": "^2.6.3",
+    "karma": "^1.7.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jspm": "^2.2.3",
     "object.assign": "^4.0.4",
     "require-dir": "^0.3.2",
     "run-sequence": "^1.2.2",
     "testcafe": "^0.15.0",
     "vinyl-paths": "^2.1.0"
+  },
+  "jspm": {
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
   }
 }
