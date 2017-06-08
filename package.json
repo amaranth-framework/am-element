@@ -4,7 +4,7 @@
   "description": "AmElement - Abstract Web Component Class",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/gulp/bin/gulp.js build",
+    "build": "exec ./node_modules/gulp/bin/gulp.js build",
     "babel-js": "./node_modules/.bin/babel src/ -d test/build",
     "babel-html": "./node_modules/.bin/babel-html -s test/src -d test/build",
     "pretest": "npm run babel-js && npm run babel-html",
@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/amaranth-framework/am-element#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
     "babel-html": "^0.5.1",
     "babel-plugin-syntax-flow": "^6.18.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -33,23 +32,19 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-es2015-loose": "^8.0.0",
+    "babel-preset-es2015-native-modules": "^6.9.4",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-runtime": "^6.23.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
-    "gulp-ignore": "^2.0.2",
-    "gulp-insert": "^0.5.0",
-    "gulp-rename": "^1.2.2",
     "gulp-run-sequence": "^0.3.2",
-    "gulp-util": "^3.0.8",
     "http-server": "^0.10.0",
-    "merge2": "^1.0.3",
     "object.assign": "^4.0.4",
+    "require-dir": "^0.3.2",
     "run-sequence": "^1.2.2",
     "testcafe": "^0.15.0",
-    "through2": "^2.0.3",
     "vinyl-paths": "^2.1.0"
   }
 }
