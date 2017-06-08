@@ -85,7 +85,7 @@ class AmElement extends HTMLElement {
 			// determine the attribute's element
 			const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
 			// determine the attribute's element property
-			const PROPERTY = this.getAttribute(`data-src-${name}`);
+			const PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 			// set property to inner element
 			ELEMENT[PROPERTY] = value;
 		} else {
@@ -125,5 +125,12 @@ class AmElement extends HTMLElement {
 	getAttributeApplyValueMethod(name) {
 		let method = `attribute${name.replace(/[\-_]\w/g, (w) => w.replace(/[\-_]/, '').toUpperCase())}ApplyValue`;
 		return this[method];
+	}
+	/**
+	 * Return the list of property names changeable by observedAttributes list
+	 * @return {Object(String:String)}
+	 */
+	static get observedAttributesProperty() {
+		return {};
 	}
 }

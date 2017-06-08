@@ -30,7 +30,7 @@ var AmElement = function (_HTMLElement) {
 		_this._root = _this.attachShadow({ mode: 'open' });
 
 		// determine component main class
-		_this._mainClass = _this.tagName.toLowerCase().replace('-element', '');
+		_this._mainClass = _this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
 
 		//
 		_this.defineObservedAttributesAsProperties();
@@ -98,25 +98,29 @@ var AmElement = function (_HTMLElement) {
    */
 
 	}, {
-		key: 'changeValue',
+		key: 'attributeApplyValue',
 
 		//////////////////////////////////////////////////////////////////////////
 		//
 		//////////////////////////////////////////////////////////////////////////
 		/**
-   * [setAttributeValue description]
+   * Apply an attribute value to the required element
    * @param {String} name
    * @param {String} newValue
-   * @param {String} oldValue
    * @return {void}
    */
-		value: function changeValue(name, newValue, oldValue) {
-			// determine the attribute's element
-			var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
-			// determine the attribute's element property
-			var PROPERTY = ELEMENT.getAttribute('data-src-' + name);
-			//
-			ELEMENT[PROPERTY] = newValue;
+		value: function attributeApplyValue(name, value) {
+			var method = this.getAttributeApplyValueMethod(name);
+			if (!method) {
+				// determine the attribute's element
+				var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
+				// determine the attribute's element property
+				var PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
+				// set property to inner element
+				ELEMENT[PROPERTY] = value;
+			} else {
+				method.call(this, [value]);
+			}
 		}
 		/**
    * Define generic getter & setter for each observed attribute (as internal variables)
@@ -139,7 +143,7 @@ var AmElement = function (_HTMLElement) {
 						set: function set(value) {
 							this['__' + name] = value;
 							this.setAttribute(name, value);
-							// this.changeValue(name, value);
+							this.attributeApplyValue(name, value);
 						}
 					});
 				}
@@ -160,10 +164,28 @@ var AmElement = function (_HTMLElement) {
 			}) + 'ChangedCallback';
 			return this[method];
 		}
+	}, {
+		key: 'getAttributeApplyValueMethod',
+		value: function getAttributeApplyValueMethod(name) {
+			var method = 'attribute' + name.replace(/[\-_]\w/g, function (w) {
+				return w.replace(/[\-_]/, '').toUpperCase();
+			}) + 'ApplyValue';
+			return this[method];
+		}
+		/**
+   * Return the list of property names changeable by observedAttributes list
+   * @return {Object(String:String)}
+   */
+
 	}], [{
 		key: 'observedAttributes',
 		get: function get() {
 			return [];
+		}
+	}, {
+		key: 'observedAttributesProperty',
+		get: function get() {
+			return {};
 		}
 	}]);
 

@@ -49,7 +49,7 @@ let AmElement = class AmElement extends HTMLElement {
 		if (!method) {
 			const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
 
-			const PROPERTY = this.getAttribute(`data-src-${name}`);
+			const PROPERTY = this.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 
 			ELEMENT[PROPERTY] = value;
 		} else {
@@ -81,5 +81,9 @@ let AmElement = class AmElement extends HTMLElement {
 	getAttributeApplyValueMethod(name) {
 		let method = `attribute${name.replace(/[\-_]\w/g, w => w.replace(/[\-_]/, '').toUpperCase())}ApplyValue`;
 		return this[method];
+	}
+
+	static get observedAttributesProperty() {
+		return {};
 	}
 };

@@ -65,7 +65,7 @@ var AmElement = function (_HTMLElement) {
 			if (!method) {
 				var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
 
-				var PROPERTY = this.getAttribute('data-src-' + name);
+				var PROPERTY = this.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
 
 				ELEMENT[PROPERTY] = value;
 			} else {
@@ -112,6 +112,11 @@ var AmElement = function (_HTMLElement) {
 		key: 'observedAttributes',
 		get: function get() {
 			return [];
+		}
+	}, {
+		key: 'observedAttributesProperty',
+		get: function get() {
+			return {};
 		}
 	}]);
 

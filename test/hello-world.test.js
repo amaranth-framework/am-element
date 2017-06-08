@@ -18,14 +18,17 @@ test('Check attribute presence', async t => {
     // Test Element
 	const selector = Selector('am-hello-world').addCustomDOMProperties({
         message: el => el.message,
+        _mainClass: el => el._mainClass,
 		element: el => el
     });
 	const element = await selector.element;
 	// Test Code
+	await t.expect(element._mainClass).eql('hello-world');
+
 	await t.expect(element.getAttribute('message')).eql('Hello');
 	await t.expect(element.message).eql('Hello');
 
-	// won't work testing ... 
+	// won't work testing ...
 	// element.message = 'Hi';
 	// await t.expect(element.getAttribute('message')).eql('Hi');
 	// await t.expect(element.message).eql('Hi');
