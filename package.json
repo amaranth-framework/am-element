@@ -9,7 +9,8 @@
     "babel-html": "./node_modules/.bin/babel-html -s test/src -d test/build",
     "pretest": "npm run babel-js && npm run babel-html",
     "test": "./node_modules/.bin/testcafe all test/*.test.js",
-    "test-chrome": "npm run pretest && ./node_modules/.bin/testcafe chrome test/*.test.js"
+    "test-chrome": "npm run pretest && ./node_modules/.bin/testcafe chrome test/*.test.js",
+    "karma": "./node_modules/karma-cli/bin/karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "karma": "^1.7.0",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-chrome-launcher": "^2.1.1",
+    "karma-cli": "^1.0.1",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-jspm": "^2.2.3",
