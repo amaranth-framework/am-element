@@ -9,7 +9,11 @@ export class AmElement extends HTMLElement {
 	constructor(_useShadow = { mode: 'open' }) {
 		super();
 
-		console.log(_useShadow);
+		/**
+		 * [_useShadow description]
+		 * @type {[type]}
+		 */
+		this._useShadow = _useShadow;
 
 		// determine whether template is attached or not
 		this._attached = false;

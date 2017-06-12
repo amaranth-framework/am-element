@@ -1,32 +1,4 @@
-import { AmElement } from '../src/am-element';
-
-class HelloWorldElement extends AmElement {
-	/**
-	* @see AmElement::constructor()
-	*/
-	constructor() {
-		super();
-		// super(false);
-		// super({ mode: 'closed' });
-		// this._root = this;
-		// this._root = this.attachShadow({ mode: 'closed' });;
-	}
-	/**
-	* @see AmElement::observedAttributes()
-	*/
-	static get observedAttributes() {
-		return ['message'];
-	}
-	/**
-	* @see AmElement::observedAttributesProperty()
-	*/
-	static get observedAttributesProperty() {
-		return {
-			message: 'innerHTML'
-		};
-	}
-};
-
+import { HelloWorldElement } from './am-hello-world';
 window.customElements.define('am-hello-world', HelloWorldElement);
 
 document.body.innerHTML = `<template id="am-hello-world-template">
