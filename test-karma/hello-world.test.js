@@ -1,19 +1,30 @@
 import { AmElement } from '../src/am-element';
 
 class HelloWorldElement extends AmElement {
-  /**
-   * @see AmElement::constructor()
-   */
-  constructor() {
-	super();
-	// this._root = this;
-  }
-  /**
-   * @see AmElement::observedAttributes()
-   */
-  static get observedAttributes() {
-	return ['message'];
-  }
+	/**
+	* @see AmElement::constructor()
+	*/
+	constructor() {
+		super();
+		// super(false);
+		// super({ mode: 'closed' });
+		// this._root = this;
+		// this._root = this.attachShadow({ mode: 'closed' });;
+	}
+	/**
+	* @see AmElement::observedAttributes()
+	*/
+	static get observedAttributes() {
+		return ['message'];
+	}
+	/**
+	* @see AmElement::observedAttributesProperty()
+	*/
+	static get observedAttributesProperty() {
+		return {
+			message: 'innerHTML'
+		};
+	}
 };
 
 window.customElements.define('am-hello-world', HelloWorldElement);
@@ -23,58 +34,61 @@ document.body.innerHTML = `<template id="am-hello-world-template">
 </template>
 <am-hello-world message="Hello" data-src-message="innerHTML"></am-hello-world>`;
 
-describe('the framework config', () => {
-	it('should initialize', () => {
+describe('HelloWorldElement => AmElement', () => {
 
-		console.log(document.querySelector('am-hello-world'));
-
-		// let aureliaMock = jasmine.createSpyObj('aureliaMock', ['loader']);
-		// let config = new FrameworkConfiguration(aureliaMock);
-		//
-		// expect(config).toBeDefined();
-		// expect(config.aurelia).toBe(aureliaMock);
-		// expect(config.info).toEqual(jasmine.any(Array));
-		// expect(config.info.length).toEqual(0);
-		// expect(config.processed).toBeFalsy();
+	it('Check if custom element exists', () => {
+		expect(document.querySelectorAll('am-hello-world').length).toEqual(1);
 	});
-}
+	it('Check if custom element exists', () => {
+		const element = document.querySelector('am-hello-world');
+		console.log('Shadow root', element.shadowRoot);
+		console.log('Root', element._root.innerHTML);
+		console.log('HTML', element.innerHTML);
+		// expect().toEqual(1);
+	});
 
-// import { Selector } from 'testcafe';
-//
-//
-// const WAITTIME=100;
-// // const WAITTIME=60*1000;
-//
-// fixture `Amaranth Custom Element`
-//     .page `./build/am-element.html`
-//
-// test('Check if custom element exists', async t => {
-//     // Test Element
-// 	const selector = Selector('am-hello-world');
-// 	// Test Code
-// 	await t.wait(WAITTIME).expect(selector.count).eql(1);
-// });
-//
-// test('Check attribute presence', async t => {
-//     // Test Element
-// 	const selector = Selector('am-hello-world').addCustomDOMProperties({
-//         message: el => el.message,
-//         _mainClass: el => el._mainClass,
-// 		element: el => el
-//     });
-// 	const element = await selector.element;
-// 	// Test Code
-// 	await t.expect(element._mainClass).eql('hello-world');
-//
-// 	await t.expect(element.getAttribute('message')).eql('Hello');
-// 	await t.expect(element.message).eql('Hello');
-//
-// 	// won't work testing ...
-// 	// element.message = 'Hi';
-// 	// await t.expect(element.getAttribute('message')).eql('Hi');
-// 	// await t.expect(element.message).eql('Hi');
-//
-// 	// element.setAttribute('message', 'Hallo');
-// 	// await t.expect(element.getAttribute('message')).eql('Hallo');
-// 	// await t.expect(element.message).eql('Hallo');
-// });
+	it('Check constructor inheritance [constructor()]', () => {
+		const element = document.querySelector('am-hello-world');
+		// expect(element instanceof HelloWorldElement).toBeTrue();
+		// expect(element instanceof AmElement).toBeTrue();
+		// expect(element instanceof HTMLElement).toBeTrue();
+	});
+
+	it('Check observedAttributes<Property>', () => {
+		expect(HelloWorldElement.observedAttributes).toEqual(['message']);
+		expect(HelloWorldElement.observedAttributesProperty).toEqual({'message': 'innerHTML'});
+	});
+
+	it('Check if custom main class is correct', () => {
+		const element = document.querySelector('am-hello-world');
+		expect(element._mainClass).toEqual('hello-world');
+	});
+
+	it('Check attributes and placement at connection [connectedCallback()]', () => {
+		const element = document.querySelector('am-hello-world');
+
+		expect(element.getAttribute('message')).toEqual('Hello');
+		expect(element.message).toEqual('Hello');
+
+		console.log(element.querySelector('span') || 'MATAAAAAAAAAAAAA');
+	});
+
+
+	it('Check if functionality for getter/setter versut getAttribute/setAttribute [attributeChangedCallback()]', () => {
+		const element = document.querySelector('am-hello-world');
+
+		// won't work testing ...
+		element.message = 'Hi';
+		expect(element.getAttribute('message')).toEqual('Hi');
+		expect(element.message).toEqual('Hi');
+
+		element.setAttribute('message', 'Hallo');
+		expect(element.getAttribute('message')).toEqual('Hallo');
+		expect(element.message).toEqual('Hallo');
+	});
+
+	// expect(config.aurelia).toBe(aureliaMock);
+	// expect(config.info).toEqual(jasmine.any(Array));
+	// expect(config.info.length).toEqual(0);
+	// expect(config.processed).toBeFalsy();
+});

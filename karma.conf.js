@@ -14,18 +14,15 @@ module.exports = function(config) {
 
 		jspm: {
 			// Edit this to your needs
-			loadFiles: ['test-karma/**/*.js'],
-			serveFiles : ['src/**/*.js']
+			serveFiles : ['src/**/*.js'],
+			loadFiles: ['test-karma/**/*.js']
 		},
 
 
 		// list of files / patterns to load in the browser
 		files: [
 			'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/custom-elements-es5-adapter.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-hi-sd-ce.js',
-
-			'test-karma/**/*.js',
-			'src/**/*.js'
+			'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/1.0.1/webcomponents-hi-sd-ce.js'
 		],
 
 

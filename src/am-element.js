@@ -1,19 +1,22 @@
 /**
  * @link https://developer.mozilla.org/en/docs/Web/API/HTMLElement
  */
-class AmElement extends HTMLElement {
+export class AmElement extends HTMLElement {
 	/**
 	 * @see HTMLElement::constructor()
 	 * @return {AmElement}
 	 */
-	constructor() {
+	constructor(_useShadow = { mode: 'open' }) {
 		super();
+
+		console.log(_useShadow);
 
 		// determine whether template is attached or not
 		this._attached = false;
 
 		// attach shadow root
-		this._root = this.attachShadow({ mode: 'open' });
+		if (_useShadow) this.attachShadow(_useShadow);
+		// this._root = this.attachShadow({ mode: 'open' });
 
 		// determine component main class
 		this._mainClass = this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
@@ -52,7 +55,7 @@ class AmElement extends HTMLElement {
 		if (TEMPLATE) {
 			// const CONTENT = document.importNode(TEMPLATE.content, true);
 			// this._root.appendChild(CONTENT);
-			this._root.innerHTML = TEMPLATE.innerHTML;
+			this.shadowRoot.innerHTML = TEMPLATE.innerHTML;
 		}
 		this.constructor.observedAttributes.forEach((name) => { this[name] = this.getAttribute(name); });
 	}
@@ -83,7 +86,7 @@ class AmElement extends HTMLElement {
 		let method = this.getAttributeApplyValueMethod(name);
 		if (!method) {
 			// determine the attribute's element
-			const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
+			const ELEMENT = this.shadowRoot.querySelector(`.${this._mainClass}__${name}`);
 			// determine the attribute's element property
 			const PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 			// set property to inner element
