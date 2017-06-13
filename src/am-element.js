@@ -1,31 +1,31 @@
-
-const _amElement = new Map();
+/**
+ * Amaranth Framework (http://amaranth-framework.github.io)
+ *
+ * @link      http://github.com/amaranth-framework/am-element for the canonical source repository
+ * @copyright Copyright (c) 2007-2017 IT Media Connect S.R.L. Romania (http://www.itmediaconnect.ro)
+ * @license   https://github.com/amaranth-framework/am-element/blob/master/LICENSE MIT License
+ */
 
 /**
+ * Amaranth HTMLElement Abstract Class
  * @link https://developer.mozilla.org/en/docs/Web/API/HTMLElement
+ * @author Dragos Cirjan <dragos.cirjan@gmail.com>
+ * @author Bogdan Arvinte <bogdan.arvinte@gmail.com>
  */
-export class AmElement extends HTMLElement {
+export class AmElement extends AmElement {
 	/**
 	 * @see HTMLElement::constructor()
 	 * @return {AmElement}
 	 */
 	constructor(useShadow = { mode: 'open' }) {
 		super();
-
 		// determine whether template is attached or not
 		this._attached = false;
-
 		// attach shadow root
-		// this._root = useShadow ? this.attachShadow(useShadow) : this;
-		_amElement.set(this, {
-			root: useShadow ? this.attachShadow(useShadow) : this,
-			mode: useShadow ? useShadow.mode : false
-		});
-
+		this._root = useShadow ? this.attachShadow(useShadow) : this;
 		// determine component main class
 		this._mainClass = this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
-
-		//
+		// define getters and setters for all observed attributes
 		this.defineObservedAttributesAsProperties();
 	}
 	/**
@@ -54,15 +54,21 @@ export class AmElement extends HTMLElement {
 	 */
 	connectedCallback() {
 		this._attached = true;
-
-		const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
-		if (TEMPLATE) {
-			// const CONTENT = document.importNode(TEMPLATE.content, true);
-			// this._root.appendChild(CONTENT);
-			// this._root.innerHTML = TEMPLATE.innerHTML;
-			_amElement.get(this).root .innerHTML = TEMPLATE.innerHTML;
+		// if no render method is defined
+		if (!this.render) {
+			// assign template
+			const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
+			if (TEMPLATE) {
+				// this._root.appendChild(document.importNode(TEMPLATE.content, true));
+				this._root.innerHTML = TEMPLATE.innerHTML;
+			}
+		} else {
+			this.render();
 		}
-		this.constructor.observedAttributes.forEach((name) => { this[name] = this.getAttribute(name); });
+		// parse element attributes (passing them through getter will also render them)
+		this.constructor.observedAttributes.forEach((name) => {
+			this[name] = this.getAttribute(name);
+		});
 	}
 	/**
 	 * @see HTMLElement::disctonnectedCallback()
@@ -80,17 +86,6 @@ export class AmElement extends HTMLElement {
 	 * Proprietary Methods
 	 ***************************************************************************************************/
 	/**
-	 * Determine root (shadowRoot) element
-	 * @return {HTMLElement}
-	 */
-	get _root() {
-		let shadow = _amElement.get(this);
-		if (shadow && shadow.mode === 'closed') {
-			return null;
-		}
-		return shadow.root;
-	}
-	/**
 	 * Apply an attribute value to the required element
 	 * @param {String} name
 	 * @param {String} newValue
@@ -100,8 +95,7 @@ export class AmElement extends HTMLElement {
 		let method = this.getAttributeApplyValueMethod(name);
 		if (!method) {
 			// determine the attribute's element
-			// const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
-			const ELEMENT = _amElement.get(this).root.querySelector(`.${this._mainClass}__${name}`);
+			const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
 			// determine the attribute's element property
 			const PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 			// set property to inner element

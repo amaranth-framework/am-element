@@ -1,5 +1,9 @@
-define([], function () {
+define(['exports'], function (exports) {
 	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -49,17 +53,19 @@ define([], function () {
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var AmElement = function (_HTMLElement) {
-		_inherits(AmElement, _HTMLElement);
+	var AmElement = exports.AmElement = function (_AmElement) {
+		_inherits(AmElement, _AmElement);
 
 		function AmElement() {
+			var useShadow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mode: 'open' };
+
 			_classCallCheck(this, AmElement);
 
 			var _this = _possibleConstructorReturn(this, (AmElement.__proto__ || Object.getPrototypeOf(AmElement)).call(this));
 
 			_this._attached = false;
 
-			_this._root = _this.attachShadow({ mode: 'open' });
+			_this._root = useShadow ? _this.attachShadow(useShadow) : _this;
 
 			_this._mainClass = _this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
 
@@ -88,19 +94,22 @@ define([], function () {
 
 				this._attached = true;
 
-				var TEMPLATE = document.querySelector('#' + this.tagName.toLowerCase() + '-template');
-				if (TEMPLATE) {
-					this._root.innerHTML = TEMPLATE.innerHTML;
+				if (!this.render) {
+					var TEMPLATE = document.querySelector('#' + this.tagName.toLowerCase() + '-template');
+					if (TEMPLATE) {
+						this._root.innerHTML = TEMPLATE.innerHTML;
+					}
+				} else {
+					this.render();
 				}
+
 				this.constructor.observedAttributes.forEach(function (name) {
 					_this2[name] = _this2.getAttribute(name);
 				});
 			}
 		}, {
 			key: 'disctonnectedCallback',
-			value: function disctonnectedCallback() {
-				console.log('Custom Element ' + this._mainClass + ' removed from DOM!');
-			}
+			value: function disctonnectedCallback() {}
 		}, {
 			key: 'attributeApplyValue',
 			value: function attributeApplyValue(name, value) {
@@ -108,7 +117,7 @@ define([], function () {
 				if (!method) {
 					var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
 
-					var PROPERTY = this.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
+					var PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
 
 					ELEMENT[PROPERTY] = value;
 				} else {
@@ -164,5 +173,5 @@ define([], function () {
 		}]);
 
 		return AmElement;
-	}(HTMLElement);
+	}(AmElement);
 });
