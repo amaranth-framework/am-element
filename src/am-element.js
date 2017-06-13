@@ -1,3 +1,6 @@
+
+const _amElement = new Map();
+
 /**
  * @link https://developer.mozilla.org/en/docs/Web/API/HTMLElement
  */
@@ -6,21 +9,18 @@ export class AmElement extends HTMLElement {
 	 * @see HTMLElement::constructor()
 	 * @return {AmElement}
 	 */
-	constructor(_useShadow = { mode: 'open' }) {
+	constructor(useShadow = { mode: 'open' }) {
 		super();
-
-		/**
-		 * [_useShadow description]
-		 * @type {[type]}
-		 */
-		this._useShadow = _useShadow;
 
 		// determine whether template is attached or not
 		this._attached = false;
 
 		// attach shadow root
-		if (_useShadow) this.attachShadow(_useShadow);
-		// this._root = this.attachShadow({ mode: 'open' });
+		// this._root = useShadow ? this.attachShadow(useShadow) : this;
+		_amElement.set(this, {
+			root: useShadow ? this.attachShadow(useShadow) : this,
+			mode: useShadow ? useShadow.mode : false
+		});
 
 		// determine component main class
 		this._mainClass = this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
@@ -59,17 +59,16 @@ export class AmElement extends HTMLElement {
 		if (TEMPLATE) {
 			// const CONTENT = document.importNode(TEMPLATE.content, true);
 			// this._root.appendChild(CONTENT);
-			this.shadowRoot.innerHTML = TEMPLATE.innerHTML;
+			// this._root.innerHTML = TEMPLATE.innerHTML;
+			_amElement.get(this).root .innerHTML = TEMPLATE.innerHTML;
 		}
 		this.constructor.observedAttributes.forEach((name) => { this[name] = this.getAttribute(name); });
 	}
 	/**
 	 * @see HTMLElement::disctonnectedCallback()
-	 * @return {void} [description]
+	 * @return {void}
 	 */
-	disctonnectedCallback() {
-		console.log(`Custom Element ${this._mainClass} removed from DOM!`);
-	}
+	disctonnectedCallback() {}
 	/**
 	 * Return this list of observable attributes for the HTML Element
 	 * @return {Array(String)}
@@ -77,9 +76,20 @@ export class AmElement extends HTMLElement {
 	static get observedAttributes() {
 		return [];
 	}
-	//////////////////////////////////////////////////////////////////////////
-	//
-	//////////////////////////////////////////////////////////////////////////
+	/***************************************************************************************************
+	 * Proprietary Methods
+	 ***************************************************************************************************/
+	/**
+	 * Determine root (shadowRoot) element
+	 * @return {HTMLElement}
+	 */
+	get _root() {
+		let shadow = _amElement.get(this);
+		if (shadow && shadow.mode === 'closed') {
+			return null;
+		}
+		return shadow.root;
+	}
 	/**
 	 * Apply an attribute value to the required element
 	 * @param {String} name
@@ -90,7 +100,8 @@ export class AmElement extends HTMLElement {
 		let method = this.getAttributeApplyValueMethod(name);
 		if (!method) {
 			// determine the attribute's element
-			const ELEMENT = this.shadowRoot.querySelector(`.${this._mainClass}__${name}`);
+			// const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
+			const ELEMENT = _amElement.get(this).root.querySelector(`.${this._mainClass}__${name}`);
 			// determine the attribute's element property
 			const PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 			// set property to inner element
@@ -129,6 +140,12 @@ export class AmElement extends HTMLElement {
 		let method = `attribute${name.replace(/[\-_]\w/g, (w) => w.replace(/[\-_]/, '').toUpperCase())}ChangedCallback`;
 		return this[method];
 	}
+	/**
+	 * [getAttributeApplyValueMethod description]
+	 * @method getAttributeApplyValueMethod
+	 * @param  {String}            name
+	 * @return {Boolean|Function}
+	 */
 	getAttributeApplyValueMethod(name) {
 		let method = `attribute${name.replace(/[\-_]\w/g, (w) => w.replace(/[\-_]/, '').toUpperCase())}ApplyValue`;
 		return this[method];

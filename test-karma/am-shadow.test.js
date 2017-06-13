@@ -1,26 +1,47 @@
-import { HelloWorldElement } from './am-hello-world';
-window.customElements.define('am-hello-world', HelloWorldElement);
+import { AmElement } from '../src/am-element';
 
-document.body.innerHTML = `<template id="am-hello-world-template">
-<h1 class="hello-world"><span class="hello-world__message"></span> World!</h1>
+class HelloWorldElement extends AmElement {
+	/**
+	* @see AmElement::constructor()
+	*/
+	constructor() {
+		super(false);
+	}
+	/**
+	* @see AmElement::observedAttributes()
+	*/
+	static get observedAttributes() {
+		return ['message'];
+	}
+	/**
+	* @see AmElement::observedAttributesProperty()
+	*/
+	static get observedAttributesProperty() {
+		return {
+			message: 'innerHTML'
+		};
+	}
+};
+
+window.customElements.define('am-hello-world-shadow', HelloWorldElement);
+
+document.body.innerHTML += `<template id="am-hello-world-shadow-template">
+<h1 class="hello-world-shadow"><span class="hello-world-shadow__message"></span> World!</h1>
 </template>
-<am-hello-world message="Hello" data-src-message="innerHTML"></am-hello-world>`;
+<am-hello-world-shadow message="Hello" data-src-message="innerHTML"></am-hello-world-shadow>`;
 
+/************************************************************************************************
+ * [HelloWorldElement description]
+ * @type {[type]}
+ ************************************************************************************************/
 describe('HelloWorldElement => AmElement', () => {
 
 	it('Check if custom element exists', () => {
-		expect(document.querySelectorAll('am-hello-world').length).toEqual(1);
-	});
-	it('Check if custom element exists', () => {
-		const element = document.querySelector('am-hello-world');
-		console.log('Shadow root', element.shadowRoot);
-		console.log('Root', element._root.innerHTML);
-		console.log('HTML', element.innerHTML);
-		// expect().toEqual(1);
+		expect(document.querySelectorAll('am-hello-world-shadow').length).toEqual(1);
 	});
 
 	it('Check constructor inheritance [constructor()]', () => {
-		const element = document.querySelector('am-hello-world');
+		const element = document.querySelector('am-hello-world-shadow');
 		// expect(element instanceof HelloWorldElement).toBeTrue();
 		// expect(element instanceof AmElement).toBeTrue();
 		// expect(element instanceof HTMLElement).toBeTrue();
@@ -32,24 +53,21 @@ describe('HelloWorldElement => AmElement', () => {
 	});
 
 	it('Check if custom main class is correct', () => {
-		const element = document.querySelector('am-hello-world');
-		expect(element._mainClass).toEqual('hello-world');
+		const element = document.querySelector('am-hello-world-shadow');
+		expect(element._mainClass).toEqual('hello-world-shadow');
 	});
 
 	it('Check attributes and placement at connection [connectedCallback()]', () => {
-		const element = document.querySelector('am-hello-world');
+		const element = document.querySelector('am-hello-world-shadow');
 
-		expect(element.getAttribute('message')).toEqual('Hello');
-		expect(element.message).toEqual('Hello');
-
-		console.log(element.querySelector('span') || 'MATAAAAAAAAAAAAA');
+		expect(element._attached).toBe(true);
+		expect(element.querySelector('span').innerText).toEqual('Hello');
 	});
 
 
 	it('Check if functionality for getter/setter versut getAttribute/setAttribute [attributeChangedCallback()]', () => {
-		const element = document.querySelector('am-hello-world');
+		const element = document.querySelector('am-hello-world-shadow');
 
-		// won't work testing ...
 		element.message = 'Hi';
 		expect(element.getAttribute('message')).toEqual('Hi');
 		expect(element.message).toEqual('Hi');
@@ -57,10 +75,8 @@ describe('HelloWorldElement => AmElement', () => {
 		element.setAttribute('message', 'Hallo');
 		expect(element.getAttribute('message')).toEqual('Hallo');
 		expect(element.message).toEqual('Hallo');
+
+		expect(element.querySelector('span').innerText).toEqual('Hallo');
 	});
 
-	// expect(config.aurelia).toBe(aureliaMock);
-	// expect(config.info).toEqual(jasmine.any(Array));
-	// expect(config.info.length).toEqual(0);
-	// expect(config.processed).toBeFalsy();
 });
