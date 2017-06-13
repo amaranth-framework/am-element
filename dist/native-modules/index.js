@@ -6,17 +6,27 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AmElement = function (_HTMLElement) {
-	_inherits(AmElement, _HTMLElement);
+/**
+ * Amaranth Framework (http://amaranth-framework.github.io)
+ *
+ * @link      http://github.com/amaranth-framework/am-element for the canonical source repository
+ * @copyright Copyright (c) 2007-2017 IT Media Connect S.R.L. Romania (http://www.itmediaconnect.ro)
+ * @license   https://github.com/amaranth-framework/am-element/blob/master/LICENSE MIT License
+ */
+
+export var AmElement = function (_AmElement) {
+	_inherits(AmElement, _AmElement);
 
 	function AmElement() {
+		var useShadow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mode: 'open' };
+
 		_classCallCheck(this, AmElement);
 
 		var _this = _possibleConstructorReturn(this, (AmElement.__proto__ || Object.getPrototypeOf(AmElement)).call(this));
 
 		_this._attached = false;
 
-		_this._root = _this.attachShadow({ mode: 'open' });
+		_this._root = useShadow ? _this.attachShadow(useShadow) : _this;
 
 		_this._mainClass = _this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
 
@@ -45,19 +55,22 @@ var AmElement = function (_HTMLElement) {
 
 			this._attached = true;
 
-			var TEMPLATE = document.querySelector('#' + this.tagName.toLowerCase() + '-template');
-			if (TEMPLATE) {
-				this._root.innerHTML = TEMPLATE.innerHTML;
+			if (!this.render) {
+				var TEMPLATE = document.querySelector('#' + this.tagName.toLowerCase() + '-template');
+				if (TEMPLATE) {
+					this._root.innerHTML = TEMPLATE.innerHTML;
+				}
+			} else {
+				this.render();
 			}
+
 			this.constructor.observedAttributes.forEach(function (name) {
 				_this2[name] = _this2.getAttribute(name);
 			});
 		}
 	}, {
 		key: 'disctonnectedCallback',
-		value: function disctonnectedCallback() {
-			console.log('Custom Element ' + this._mainClass + ' removed from DOM!');
-		}
+		value: function disctonnectedCallback() {}
 	}, {
 		key: 'attributeApplyValue',
 		value: function attributeApplyValue(name, value) {
@@ -65,7 +78,7 @@ var AmElement = function (_HTMLElement) {
 			if (!method) {
 				var ELEMENT = this._root.querySelector('.' + this._mainClass + '__' + name);
 
-				var PROPERTY = this.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
+				var PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute('data-src-' + name);
 
 				ELEMENT[PROPERTY] = value;
 			} else {
@@ -121,4 +134,4 @@ var AmElement = function (_HTMLElement) {
 	}]);
 
 	return AmElement;
-}(HTMLElement);
+}(AmElement);

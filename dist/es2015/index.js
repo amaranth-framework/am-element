@@ -1,10 +1,18 @@
-let AmElement = class AmElement extends HTMLElement {
-	constructor() {
+/**
+ * Amaranth Framework (http://amaranth-framework.github.io)
+ *
+ * @link      http://github.com/amaranth-framework/am-element for the canonical source repository
+ * @copyright Copyright (c) 2007-2017 IT Media Connect S.R.L. Romania (http://www.itmediaconnect.ro)
+ * @license   https://github.com/amaranth-framework/am-element/blob/master/LICENSE MIT License
+ */
+
+export let AmElement = class AmElement extends AmElement {
+	constructor(useShadow = { mode: 'open' }) {
 		super();
 
 		this._attached = false;
 
-		this._root = this.attachShadow({ mode: 'open' });
+		this._root = useShadow ? this.attachShadow(useShadow) : this;
 
 		this._mainClass = this.tagName.toLowerCase().replace('am-', '').replace('-element', '');
 
@@ -27,18 +35,21 @@ let AmElement = class AmElement extends HTMLElement {
 	connectedCallback() {
 		this._attached = true;
 
-		const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
-		if (TEMPLATE) {
-			this._root.innerHTML = TEMPLATE.innerHTML;
+		if (!this.render) {
+			const TEMPLATE = document.querySelector(`#${this.tagName.toLowerCase()}-template`);
+			if (TEMPLATE) {
+				this._root.innerHTML = TEMPLATE.innerHTML;
+			}
+		} else {
+			this.render();
 		}
+
 		this.constructor.observedAttributes.forEach(name => {
 			this[name] = this.getAttribute(name);
 		});
 	}
 
-	disctonnectedCallback() {
-		console.log(`Custom Element ${this._mainClass} removed from DOM!`);
-	}
+	disctonnectedCallback() {}
 
 	static get observedAttributes() {
 		return [];
@@ -49,7 +60,7 @@ let AmElement = class AmElement extends HTMLElement {
 		if (!method) {
 			const ELEMENT = this._root.querySelector(`.${this._mainClass}__${name}`);
 
-			const PROPERTY = this.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
+			const PROPERTY = this.constructor.observedAttributesProperty[name] || this.getAttribute(`data-src-${name}`);
 
 			ELEMENT[PROPERTY] = value;
 		} else {
@@ -78,6 +89,7 @@ let AmElement = class AmElement extends HTMLElement {
 		let method = `attribute${name.replace(/[\-_]\w/g, w => w.replace(/[\-_]/, '').toUpperCase())}ChangedCallback`;
 		return this[method];
 	}
+
 	getAttributeApplyValueMethod(name) {
 		let method = `attribute${name.replace(/[\-_]\w/g, w => w.replace(/[\-_]/, '').toUpperCase())}ApplyValue`;
 		return this[method];
