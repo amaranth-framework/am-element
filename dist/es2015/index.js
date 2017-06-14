@@ -6,7 +6,7 @@
  * @license   https://github.com/amaranth-framework/am-element/blob/master/LICENSE MIT License
  */
 
-export let AmElement = class AmElement extends AmElement {
+export let AmElement = class AmElement extends HTMLElement {
 	constructor(useShadow = { mode: 'open' }) {
 		super();
 

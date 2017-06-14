@@ -56,8 +56,8 @@ System.register([], function (_export, _context) {
 				};
 			}();
 
-			_export('AmElement', AmElement = function (_AmElement) {
-				_inherits(AmElement, _AmElement);
+			_export('AmElement', AmElement = function (_HTMLElement) {
+				_inherits(AmElement, _HTMLElement);
 
 				function AmElement() {
 					var useShadow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mode: 'open' };
@@ -176,7 +176,7 @@ System.register([], function (_export, _context) {
 				}]);
 
 				return AmElement;
-			}(AmElement));
+			}(HTMLElement));
 
 			_export('AmElement', AmElement);
 		}

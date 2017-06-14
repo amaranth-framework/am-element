@@ -53,8 +53,8 @@ define(['exports'], function (exports) {
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var AmElement = exports.AmElement = function (_AmElement) {
-		_inherits(AmElement, _AmElement);
+	var AmElement = exports.AmElement = function (_HTMLElement) {
+		_inherits(AmElement, _HTMLElement);
 
 		function AmElement() {
 			var useShadow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { mode: 'open' };
@@ -173,5 +173,5 @@ define(['exports'], function (exports) {
 		}]);
 
 		return AmElement;
-	}(AmElement);
+	}(HTMLElement);
 });

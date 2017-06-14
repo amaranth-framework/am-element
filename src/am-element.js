@@ -12,7 +12,7 @@
  * @author Dragos Cirjan <dragos.cirjan@gmail.com>
  * @author Bogdan Arvinte <bogdan.arvinte@gmail.com>
  */
-export class AmElement extends AmElement {
+export class AmElement extends HTMLElement {
 	/**
 	 * @see HTMLElement::constructor()
 	 * @return {AmElement}
