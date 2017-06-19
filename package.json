@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amaranth-framework/am-element.git"
+    "url": "git+https://github.com/amaranth-framework/html-element.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/amaranth-framework/am-element/issues"
+    "url": "https://github.com/amaranth-framework/html-element/issues"
   },
-  "homepage": "https://github.com/amaranth-framework/am-element#readme",
+  "homepage": "https://github.com/amaranth-framework/html-element#readme",
   "devDependencies": {
     "babel-html": "^0.5.1",
     "babel-plugin-syntax-flow": "^6.18.0",
