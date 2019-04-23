@@ -63,7 +63,7 @@ export class AmElement extends HTMLElement {
 				this._root.innerHTML = TEMPLATE.innerHTML;
 			}
 		} else {
-			this.render();
+			this._root.innerHTML = this.render();
 		}
 		// parse element attributes (passing them through getter will also render them)
 		this.constructor.observedAttributes.forEach((name) => {
